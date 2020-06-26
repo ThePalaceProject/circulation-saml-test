@@ -1,0 +1,8 @@
+[template]
+src = "conf/ldap.properties.tmpl"
+dest = "/opt/shibboleth-idp/conf/ldap.properties"
+keys = [
+    "/ldap/admin/username",
+    "/ldap/admin/password",
+    "/ldap/suffix",
+]

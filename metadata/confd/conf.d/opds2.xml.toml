@@ -1,0 +1,7 @@
+[template]
+src = "opds2.xml.tmpl"
+dest = "/metadata/opds2.xml"
+keys = [
+    "/opds2/entityid",
+    "/opds2/acs",
+]

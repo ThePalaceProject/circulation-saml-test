@@ -1,0 +1,7 @@
+[template]
+src = "settings.json.tmpl"
+dest = "/app/config/saml"
+keys = [
+    "/opds2/entityid",
+    "/opds2/acs",
+]

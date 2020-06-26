@@ -1,0 +1,7 @@
+[template]
+src = "cm.xml.tmpl"
+dest = "/metadata/cm.xml"
+keys = [
+    "/cm/entityid",
+    "/cm/acs",
+]

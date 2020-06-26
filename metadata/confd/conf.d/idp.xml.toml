@@ -1,0 +1,7 @@
+[template]
+src = "idp.xml.tmpl"
+dest = "/metadata/idp.xml"
+keys = [
+    "/idp/entityid",
+    "/idp/sso",
+]

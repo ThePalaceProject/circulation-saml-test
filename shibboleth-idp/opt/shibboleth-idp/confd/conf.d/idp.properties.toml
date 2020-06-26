@@ -1,0 +1,6 @@
+[template]
+src = "conf/idp.properties.tmpl"
+dest = "/opt/shibboleth-idp/conf/idp.properties"
+keys = [
+    "/idp/entityid",
+]

@@ -1,0 +1,9 @@
+[template]
+src = "init-users.ldif.tmpl"
+dest = "/init-users.ldif"
+keys = [
+    "/ldap/admin/username",
+    "/ldap/admin/password",
+    "/ldap/suffix",
+    "/hostname",
+]

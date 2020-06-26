@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="content d-flex justify-content-center">
+        <div class="row">
+            <div sm="auto" class="row d-flex flex-column justify-content-center">
+                <h3>Available books</h3>
+
+                {% if books %}
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Summary</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.summary }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('books.borrow', link=book.borrow_link) }}">Borrow</a>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('books.download', link=book.download_link) }}">Download</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

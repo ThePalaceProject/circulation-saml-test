@@ -1,0 +1,25 @@
+[General]
+FullMachineName = {{getv "/hostname"}}
+SuiteSpotUserID = nobody
+SuiteSpotGroup = nobody
+ConfigDirectoryAdminID = {{getv "/ldap/admin/username"}}
+ConfigDirectoryAdminPwd = {{getv "/ldap/admin/password"}}
+ConfigDirectoryLdapURL = ldap://{{getv "/hostname"}}:389/o=NetscapeRoot
+
+[slapd]
+SlapdConfigForMC = Yes
+UseExistingMC = 0
+ServerPort = 389
+ServerIdentifier = dir
+Suffix = {{getv "/ldap/suffix"}}
+RootDN = cn=Directory Manager
+RootDNPwd = {{getv "/ldap/manager/password"}}
+AddSampleEntries = No
+AddOrgEntries = Yes
+
+[admin]
+Port = 9830
+ServerIpAddress = 0.0.0.0
+ServerAdminID = {{getv "/ldap/admin/username"}}
+ServerAdminPwd = {{getv "/ldap/admin/password"}}
+SysUser = nobody

@@ -1,0 +1,10 @@
+[template]
+src = "nginx.conf.tmpl"
+dest = "/etc/nginx/nginx.conf"
+keys = [
+    "/idp/hostname",
+    "/opds1/hostname",
+    "/opds2/hostname",
+    "/cmtest/hostname",
+    "/cm/hostname",
+]

@@ -1,0 +1,60 @@
+dn: cn={{getv "/ldap/admin/username"}},ou=people,{{getv "/ldap/suffix"}}
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+cn: {{getv "/ldap/admin/username"}}
+userPassword: {{getv "/ldap/admin/password"}}
+description: LDAP administrator
+
+dn: uid=rosie.nairn,ou=people,{{getv "/ldap/suffix"}}
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+uid: rosie.nairn
+cn: Rosie Nairn
+givenName: Rosie
+sn: Nairn
+userPassword: rosie.nairn
+mail: rosie.nairn@{{getv "/hostname"}}
+eduPersonPrincipalName: rosie.nairn@{{getv "/hostname"}}
+eduPersonUniqueId: rosie.nairn
+eduPersonTargetedID: rosie.nairn
+eduPersonAffiliation: staff
+eduPersonScopedAffiliation: staff
+
+dn: uid=maxim.coates,ou=people,{{getv "/ldap/suffix"}}
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+uid: maxim.coates
+cn: Maxim Coates
+givenName: Maxim
+sn: Coates
+userPassword: maxim.coates
+mail: maxim.coates@{{getv "/hostname"}}
+eduPersonPrincipalName: maxim.coates@{{getv "/hostname"}}
+eduPersonUniqueId: maxim.coates
+eduPersonTargetedID: maxim.coates
+eduPersonAffiliation: student
+eduPersonScopedAffiliation: student
+
+dn: uid=tanya.prince,ou=people,{{getv "/ldap/suffix"}}
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+uid: tanya.prince
+cn: Tanya Prince
+givenName: Tanya
+sn: Prince
+userPassword: tanya.prince
+mail: tanya.prince@{{getv "/hostname"}}
+eduPersonPrincipalName: tanya.prince@{{getv "/hostname"}}
+eduPersonUniqueId: tanya.prince
+eduPersonTargetedID: tanya.prince
+eduPersonAffiliation: student
+eduPersonScopedAffiliation: student

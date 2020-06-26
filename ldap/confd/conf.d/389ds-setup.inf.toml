@@ -1,0 +1,12 @@
+ [template]
+src = "389ds-setup.inf.tmpl"
+dest = "/389ds-setup.inf"
+keys = [
+    "/ldap/admin/username",
+    "/ldap/admin/password",
+    "/ldap/manager/password",
+    "/ldap/suffix",
+    "/hostname",
+]
+
+

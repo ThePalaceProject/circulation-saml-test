@@ -1,0 +1,77 @@
+events {
+
+}
+
+http {
+    resolver 127.0.0.11 ipv6=off;
+
+    server {
+        listen 80;
+        server_name {{ getv "/idp/hostname" }};
+
+        location / {
+            set $upstream shibboleth-idp;
+
+            proxy_pass http://$upstream;
+            proxy_set_header Host {{ getv "/idp/hostname" }};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http://$upstream/ /;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name {{ getv "/opds1/hostname" }};
+
+        location / {
+            set $upstream opds1;
+
+            proxy_pass http://$upstream;
+            proxy_set_header Host {{ getv "/opds1/hostname" }};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http://$upstream/ /;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name {{ getv "/opds2/hostname" }};
+
+        location / {
+            set $upstream opds2;
+
+            proxy_pass http://$upstream;
+            proxy_set_header Host {{ getv "/opds2/hostname" }};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http://$upstream/ /;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name {{ getv "/cm/hostname" }};
+
+        location / {
+            set $upstream cm;
+
+            proxy_pass http://$upstream;
+            proxy_set_header Host {{ getv "/cm/hostname" }};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http://$upstream/ /;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name {{ getv "/cmtest/hostname" }};
+
+        location / {
+            set $upstream cm-test;
+
+            proxy_pass http://$upstream;
+            proxy_set_header Host {{ getv "/cmtest/hostname" }};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_redirect http://$upstream/ /;
+        }
+    }
+}

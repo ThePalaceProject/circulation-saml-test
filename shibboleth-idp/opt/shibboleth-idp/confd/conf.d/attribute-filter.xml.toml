@@ -1,0 +1,8 @@
+[template]
+src = "conf/attribute-filter.xml.tmpl"
+dest = "/opt/shibboleth-idp/conf/attribute-filter.xml"
+keys = [
+    "/cm/entityid",
+    "/opds1/entityid",
+    "/opds2/entityid",
+]
