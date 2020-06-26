@@ -200,6 +200,9 @@ services:
       - "80"
     depends_on:
       - cm
+    environment:
+      CM_AUTHENTICATION_DOCUMENT_URL:
+      CM_GROUPS_URL:
     networks:
       - back
 

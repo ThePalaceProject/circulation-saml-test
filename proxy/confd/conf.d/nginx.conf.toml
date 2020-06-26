@@ -5,6 +5,6 @@ keys = [
     "/idp/hostname",
     "/opds1/hostname",
     "/opds2/hostname",
-    "/cmtest/hostname",
     "/cm/hostname",
+    "/cmtest/hostname",
 ]

@@ -10,7 +10,7 @@ http {
         server_name {{ getv "/idp/hostname" }};
 
         location / {
-            set $upstream shibboleth-idp;
+            set $upstream idp;
 
             proxy_pass http://$upstream;
             proxy_set_header Host {{ getv "/idp/hostname" }};

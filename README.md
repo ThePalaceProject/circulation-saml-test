@@ -15,8 +15,7 @@ Project consists of the following modules:
 
 ## Usage
 
-To run this project locally please do the following:
-
+### Preparing the local environment
 1. Update host names in [.env](./.env) file
 2. Replace all the host names with `127.0.0.1` in `etc/hosts` file:
 ```
@@ -38,3 +37,87 @@ docker-compose up -d metadata
 ```bash
 docker-compose up -d
 ```
+
+### Setting up Circulation Manager
+
+#### Setting up a new administrator account 
+1. Open [Circulation Manager](http://cm-test.hilbertteam.net) and set up an administrator account:
+  ![Setting up an administrator account](./docs/01-Setting-up-an-administrator-account.png "Setting up an administrator account")
+  
+2. Login into Circulation Manager:
+  ![Logging into Circulation Manager](docs/02-Logging-into-Circulation-Manager.png "Logging into Circulation Manager")
+
+#### Setting up a new library
+3. Login into Circulation Manager:
+  ![Setting up Circulation Manager](./docs/03-Setting-up-Circulation-Manager.png "Setting up Circulation Manager")
+  
+4. Start setting up a new library by clicking on **Create new library**:
+  ![Setting up a new library](./docs/04-Setting-up-a-new-library.png "Setting up a new library")
+  
+5. Fill in new library details:
+  ![Setting up a new library](./docs/05-Setting-up-a-new-library.png "Setting up a new library")
+  
+6. Scroll down, click on **Submit** and wait until new library is created:
+  ![Setting up a new library](./docs/06-Setting-up-a-new-library.png "Setting up a new library")
+  
+#### Setting up new collections
+7. Click on **Collections** to start setting up collections:
+  ![Setting up a new collection](./docs/07-Setting-up-a-new-collection.png "Setting up a new collection")
+  
+8. Click on **Create new collection**:
+  ![Setting up a new collection](./docs/08-Setting-up-a-new-collection.png "Setting up a new collection")
+  
+9. Fill in details of a new collection using `OPDS1_HOSTNAME` as a URL:
+  ![Setting up a new collection](./docs/09-Setting-up-a-new-collection.png "Setting up a new collection")
+  
+10. Scroll down, associate the new collection with the library, click on **Add library** and then click on **Submit**:
+  ![Setting up a new collection](./docs/10-Setting-up-a-new-collection.png "Setting up a new collection")
+  
+11. Create a new collection using `OPDS2_HOSTNAME` as a URL:
+  ![Setting up a new collection](./docs/11-Setting-up-a-new-collection.png "Setting up a new collection")
+
+#### Setting up a SAML authentication provider
+12. Click on **Patron authentication** to start setting up a SAML authentication provider:
+  ![Setting up a SAML authentication provider](./docs/12-Setting-up-a-patron-authentication.png "Setting up a SAML authentication provider")
+  
+13. Click on **Create new patron authentication service**:
+  ![Setting up a SAML authentication provider](./docs/13-Setting-up-a-patron-authentication.png "Setting up a SAML authentication provider")
+  
+14. Fill in patron details using [cm.xml](./metadata/output/cm.xml) to fill in SP details and [idp.xml](./metadata/output/idp.xml) to fill in IdP details: 
+  ![Setting up a SAML authentication provider](./docs/14-Setting-up-a-patron-authentication.png "Setting up a SAML authentication provider")
+  
+15. Scroll down, associate the library with the provider and click on **Add library**:
+  ![Setting up a SAML authentication provider](./docs/15-Setting-up-a-patron-authentication.png "Setting up a SAML authentication provider")
+  
+16. Click on **Submit** to finish creating a new authentication provider:
+  ![Setting up a SAML authentication provider](./docs/16-Setting-up-a-patron-authentication.png "Setting up a SAML authentication provider")
+  
+#### Setting up an Elasticsearch service
+17. Click on **Search** to start setting up an Elasticsearch service:
+  ![Setting up an Elasticsearch service](./docs/17-Setting-up-an-Elasticsearch-service.png "Setting up an Elasticsearch service")
+  
+18. Click on **Create new search service**:
+  ![Setting up an Elasticsearch service](./docs/18-Setting-up-an-Elasticsearch-service.png "Setting up an Elasticsearch service")
+  
+19. Fill in details of an Elasticsearch service using `es` as a URL: 
+  ![Setting up an Elasticsearch service](./docs/19-Setting-up-an-Elasticsearch-service.png "Setting up an Elasticsearch service")
+
+### Testing SAML authentication
+
+20. Open [Circulation Manager test application](http://cm-test.hilbertteam.net) and click on **Authenticate** to start authentication process: 
+  ![Authenticating with Circulation Manager](./docs/20-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
+  
+21. Enter credentials from [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl): 
+  ![Authenticating with Circulation Manager](./docs/21-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
+  
+22. Click on **Accept** on the consent screen: 
+  ![Authenticating with Circulation Manager](./docs/22-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
+  
+23. Borrow a book clicking on **Borrow**, wait until the operation is finished and then return back:
+  ![Borrowing a book](./docs/23-Borrowing-a-book.png "Borrowing a book")
+  
+24. Download a book by clicking on **Download**: 
+  ![Downloading a book](./docs/24-Downloading-a-book.png "Downloading a book")
+  
+25. Observe the downloaded book:
+  ![Downloading a book](./docs/25-Downloading-a-book.png "Downloading a book")
