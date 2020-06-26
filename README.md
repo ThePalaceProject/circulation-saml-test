@@ -109,6 +109,13 @@ docker-compose up -d
   
 21. Enter credentials from [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl): 
   ![Authenticating with Circulation Manager](./docs/21-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
+
+Please note that sometimes LDAP server doesn't import correctly which results in authentication errors.
+To resolve this issue you will need to do the following:
+```bash
+docker-compose exec ldap bash
+ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
+```
   
 22. Click on **Accept** on the consent screen: 
   ![Authenticating with Circulation Manager](./docs/22-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
@@ -116,7 +123,7 @@ docker-compose up -d
 23. Borrow a book clicking on **Borrow**, wait until the operation is finished and then return back:
   ![Borrowing a book](./docs/23-Borrowing-a-book.png "Borrowing a book")
   
-24. Download a book by clicking on **Download**: 
+24. Download a book by clicking on **Download**:
   ![Downloading a book](./docs/24-Downloading-a-book.png "Downloading a book")
   
 25. Observe the downloaded book:
