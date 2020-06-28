@@ -152,10 +152,10 @@ ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ld
   ![Authenticating with Circulation Manager](./docs/22-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
   
 27. Borrow a book clicking on **Borrow**, wait until the operation is finished and then return back:
-  ![Borrowing a book](docs/27-Borrowing-a-book.png "Borrowing a book")
+  ![Borrowing a book](docs/23-Borrowing-a-book.png "Borrowing a book")
   
 28. Download a book by clicking on **Download**:
-  ![Downloading a book](docs/28-Downloading-a-book.png "Downloading a book")
+  ![Downloading a book](docs/24-Downloading-a-book.png "Downloading a book")
   
 29. Observe the downloaded book:
-  ![Downloading a book](docs/29-Downloading-a-book.png "Downloading a book")
+  ![Downloading a book](docs/25-Downloading-a-book.png "Downloading a book")
