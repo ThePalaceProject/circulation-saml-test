@@ -3,15 +3,25 @@
 Testbed which could be used for testing SAML-based patron authentication in 
 [Circulation Manager](https://github.com/NYPL-Simplified/circulation).
 
+## Architecture
+
 Project consists of the following modules:
 
-- [metadata](./metadata) is a Dockerized busybox generating SAML metadata using [confd](https://github.com/kelseyhightower/confd)
-- [ldap](./ldap) is a Dockerized version of [389 Directory Server](https://directory.fedoraproject.org/) based on [389ds](https://github.com/michel4j/389ds) GitHub project
+- [metadata](./metadata) is a throwaway Dockerized busybox generating SAML metadata using [confd](https://github.com/kelseyhightower/confd)
+- [ldap](./ldap) is a Dockerized version of [389 Directory Server](https://directory.fedoraproject.org/) based on [389ds](https://github.com/michel4j/389ds) GitHub project. Contains predefined test users described in [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl) and used by Shibboleth IdP as an authentication provider 
 - [shibboleth-idp](./shibboleth-idp) is a Dockerized version of Shibboleth IdP based on [shibboleth-idp-dockerized](https://github.com/Unicon/shibboleth-idp-dockerized) and [dockerized-idp-testbed](https://github.com/UniconLabs/dockerized-idp-testbed) GitHub projects
-- [flask-sp](flask-sp) is a Dockerized Python SP based using [OneLogin's python-saml library](https://github.com/onelogin/python-saml) and serving OPDS feeds
+- [flask-sp](flask-sp) is a Dockerized Python SP based using [OneLogin's python-saml library](https://github.com/onelogin/python-saml). Used for serving OPDS feeds
 - [elasticsearch](./elasticsearch) is a Dockerized version of Elasticsearch with pre-installed analysis-icu plugin required by Circulation Manager
 - [circulation-test](./circulation-test) is a Dockerized Flask application used for testing SAML authentication in Circulation Manager 
 - [proxy](./proxy) is a Dockerized nginx reversed proxy based on [docker-nginx-with-confd](https://github.com/sysboss/docker-nginx-with-confd) GitHub project
+
+The architecture of the testbed is shown in the picture below:
+  ![Testbed architecture](docs/00-Testbed-architecture.png "Testbed architecture")
+  
+- `cm-test.hilbertteam.net` is a [circulation-test](./circulation-test) instance used for authenticating and downloading books using Circulation Manager (`cm.hilbertteam.net`)
+- `cm.hilbertteam.net` is a Circulation Manager instance with a SAML authentication provider acting as a SAML Service Provider (SP)
+- `idp.hilbertteam.net` is a [shibboleth-idp](./shibboleth-idp) instance acting as a SAML Identity Provider (IdP)
+- `opds.hilbertteam.net` and `opds.hilbert.team` are two instances of [flask-sp](flask-sp) serving two different OPDS feeds using SAML 
 
 ## Usage
 
@@ -42,10 +52,10 @@ docker-compose up -d
 
 #### Setting up a new administrator account 
 1. Open [Circulation Manager](http://cm-test.hilbertteam.net) and set up an administrator account:
-  ![Setting up an administrator account](./docs/01-Setting-up-an-administrator-account.png "Setting up an administrator account")
+  ![Setting up an administrator account](docs/02-Setting-up-an-administrator-account.png "Setting up an administrator account")
   
 2. Login into Circulation Manager:
-  ![Logging into Circulation Manager](docs/02-Logging-into-Circulation-Manager.png "Logging into Circulation Manager")
+  ![Logging into Circulation Manager](docs/01-Logging-into-Circulation-Manager.png "Logging into Circulation Manager")
 
 #### Setting up a new library
 3. Login into Circulation Manager:
@@ -101,13 +111,34 @@ docker-compose up -d
   
 19. Fill in details of an Elasticsearch service using `es` as a URL: 
   ![Setting up an Elasticsearch service](./docs/19-Setting-up-an-Elasticsearch-service.png "Setting up an Elasticsearch service")
+  
+#### Importing the OPDS feeds
+20. Connect to the Circulation Manager's Docker container:
+```bash
+docker-compose exec cm bash
+```
+
+21. Activate a Python virtual environment:
+```bash
+source env/bin/activate
+```
+
+22. Import the OPDS feeds:
+```bash
+bin/opds_import_monitor
+``` 
+
+23. Update the Elasticsearch indices:
+```bash
+bin/search_index_refresh
+```
 
 ### Testing SAML authentication
 
-20. Open [Circulation Manager test application](http://cm-test.hilbertteam.net) and click on **Authenticate** to start authentication process: 
+24. Open [Circulation Manager test application](http://cm-test.hilbertteam.net) and click on **Authenticate** to start authentication process: 
   ![Authenticating with Circulation Manager](./docs/20-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
   
-21. Enter credentials from [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl): 
+25. Enter credentials from [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl): 
   ![Authenticating with Circulation Manager](./docs/21-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
 
 Please note that sometimes LDAP server doesn't import correctly which results in authentication errors.
@@ -117,14 +148,14 @@ docker-compose exec ldap bash
 ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
 ```
   
-22. Click on **Accept** on the consent screen: 
+26. Click on **Accept** on the consent screen: 
   ![Authenticating with Circulation Manager](./docs/22-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
   
-23. Borrow a book clicking on **Borrow**, wait until the operation is finished and then return back:
-  ![Borrowing a book](./docs/23-Borrowing-a-book.png "Borrowing a book")
+27. Borrow a book clicking on **Borrow**, wait until the operation is finished and then return back:
+  ![Borrowing a book](docs/27-Borrowing-a-book.png "Borrowing a book")
   
-24. Download a book by clicking on **Download**:
-  ![Downloading a book](./docs/24-Downloading-a-book.png "Downloading a book")
+28. Download a book by clicking on **Download**:
+  ![Downloading a book](docs/28-Downloading-a-book.png "Downloading a book")
   
-25. Observe the downloaded book:
-  ![Downloading a book](./docs/25-Downloading-a-book.png "Downloading a book")
+29. Observe the downloaded book:
+  ![Downloading a book](docs/29-Downloading-a-book.png "Downloading a book")
