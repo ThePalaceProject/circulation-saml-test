@@ -51,11 +51,11 @@ docker-compose up -d
 ### Setting up Circulation Manager
 
 #### Setting up a new administrator account 
-1. Open [Circulation Manager](http://cm-test.hilbertteam.net) and set up an administrator account:
-  ![Setting up an administrator account](docs/02-Setting-up-an-administrator-account.png "Setting up an administrator account")
+1. Open [Circulation Manager](http://cm.hilbertteam.net) and set up an administrator account:
+  ![Setting up an administrator account](docs/01-Setting-up-an-administrator-account.png "Setting up an administrator account")
   
 2. Login into Circulation Manager:
-  ![Logging into Circulation Manager](docs/01-Logging-into-Circulation-Manager.png "Logging into Circulation Manager")
+  ![Logging into Circulation Manager](docs/02-Logging-into-Circulation-Manager.png "Logging into Circulation Manager")
 
 #### Setting up a new library
 3. Login into Circulation Manager:
