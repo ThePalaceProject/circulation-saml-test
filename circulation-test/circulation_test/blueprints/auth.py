@@ -8,7 +8,7 @@ blueprint = Blueprint('auth', __name__, url_prefix='/auth')
 
 AUTHENTICATION_DOCUMENT_URL = os.environ.get(
     'CM_AUTHENTICATION_DOCUMENT_URL',
-    'http://circulation.hilbertteam.net/authentication_document')
+    'http://cm.hilbertteam.net/authentication_document')
 
 
 @blueprint.route('/', methods=('GET',))

@@ -3,7 +3,39 @@
 {% block content %}
     <div class="content d-flex justify-content-center">
         <div class="row">
-            <div sm="auto" class="row d-flex flex-column justify-content-center">
+            <div sm="auto" class="d-flex flex-column justify-content-center">
+                <h3>Loans</h3>
+
+                {% if loans %}
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Summary</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for loan in loans %}
+                            <tr>
+                                <td>{{ loan.title }}</td>
+                                <td>{{ loan.summary }}</td>
+                                <td>{{ loan.author }}</td>
+                                <td>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('books.download', link=loan.download_link) }}">Download</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div sm="auto" class="d-flex flex-column justify-content-center">
                 <h3>Available books</h3>
 
                 {% if books %}
