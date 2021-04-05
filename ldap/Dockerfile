@@ -28,7 +28,7 @@ EXPOSE 389 636
 
 # supervisord
 RUN yum install -y python python-setuptools && \
-  easy_install pip && \
+  easy_install "pip<21.0" && \
   pip install pip --upgrade && \
   pip install supervisor
 RUN mkdir -p /etc/supervisor
