@@ -176,7 +176,7 @@ services:
       - back
 
   cm:
-    image: nypl/circ-webapp:development
+    image: ghcr.io/thepalaceproject/circ-webapp:main
     restart: always
     expose:
       - "80"
