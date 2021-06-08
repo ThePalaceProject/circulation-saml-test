@@ -38,22 +38,18 @@ def index():
 
 @blueprint.route('/login', methods=('GET', 'POST',))
 def login():
-    if request.referrer:
-        referrer_parse_result = urlparse.urlparse(request.referrer)
+    if 'access_token' in request.args:
+        token = request.args.get('access_token')
+        session['ACCESS_TOKEN'] = token
 
-        if 'idp.hilbertteam.net' in referrer_parse_result.netloc:
-            token = request.args.get('access_token')
-            session['ACCESS_TOKEN'] = token
-        else:
-            authentication_url = requests.utils.unquote(request.args.get('link'))
-            redirect_uri = url_for('auth.login', _external=True)
+        return redirect(url_for('home.index'))
+    else:
+        authentication_url = requests.utils.unquote(request.args.get('link'))
+        redirect_uri = url_for('auth.login', _external=True)
 
-            authentication_url += '&redirect_uri=' + requests.utils.quote(redirect_uri)
-            # authentication_url = get_authentication_url(url_for('auth.login', _external=True))
+        authentication_url += '&redirect_uri=' + requests.utils.quote(redirect_uri)
 
-            return redirect(authentication_url)
-
-    return redirect(url_for('home.index'))
+        return redirect(authentication_url)
 
 
 @blueprint.route('/logout', methods=('GET',))

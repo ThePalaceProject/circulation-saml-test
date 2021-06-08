@@ -101,6 +101,8 @@ services:
     environment:
       SAML_PATH: /app/config/saml
       LOCAL_METADATA_PATH: /metadata/idp.xml
+      IDP_ENTITYID:
+      IDP_HOSTNAME:
       OPDS1_ENTITYID:
       OPDS1_ACS:
     volumes:
@@ -126,6 +128,8 @@ services:
     environment:
       SAML_PATH: /app/config/saml
       LOCAL_METADATA_PATH: /metadata/idp.xml
+      IDP_ENTITYID:
+      IDP_HOSTNAME:
       OPDS2_ENTITYID:
       OPDS2_ACS:
     volumes:
@@ -172,7 +176,7 @@ services:
       - back
 
   cm:
-    image: nypl/circ-webapp:development
+    image: ghcr.io/thepalaceproject/circ-webapp:main
     restart: always
     expose:
       - "80"

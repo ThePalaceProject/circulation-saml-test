@@ -66,7 +66,7 @@ def _get_books():
         author = author_nodes[0].text
 
         summary_nodes = entry_node.xpath('./atom:summary', namespaces=namespaces)
-        summary = summary_nodes[0].text
+        summary = summary_nodes[0].text if summary_nodes else ''
 
         borrow_link_nodes = entry_node.xpath(
             './atom:link[@rel="http://opds-spec.org/acquisition/borrow"]', namespaces=namespaces)
