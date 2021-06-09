@@ -120,17 +120,17 @@ docker-compose exec cm bash
 
 21. Activate a Python virtual environment:
 ```bash
-source env/bin/activate
+(env)> source env/bin/activate
 ```
 
 22. Import the OPDS feeds:
 ```bash
-bin/opds_import_monitor
+(env)> bin/opds_import_monitor
 ``` 
 
 23. Update the Elasticsearch indices:
 ```bash
-bin/search_index_refresh
+(env)> bin/search_index_refresh
 ```
 
 ### Testing SAML authentication
@@ -141,12 +141,8 @@ bin/search_index_refresh
 25. Enter credentials from [init-users.ldif.tmpl](./ldap/confd/templates/init-users.ldif.tmpl): 
   ![Authenticating with Circulation Manager](./docs/21-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
 
-Please note that sometimes LDAP server doesn't import correctly which results in authentication errors.
-To resolve this issue you will need to do the following:
-```bash
-docker-compose exec ldap bash
-ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
-```
+  > :information_source: If you face an authentication issue, it might be because the LDAP server failed to import users. 
+  > Please refer to [Troubleshooting section](#troubleshooting) for detailed instructions how to resolve this issue.
   
 26. Click on **Accept** on the consent screen: 
   ![Authenticating with Circulation Manager](./docs/22-Authenticating-with-Circulation-Manager.png "Authenticating with Circulation Manager")
@@ -159,3 +155,60 @@ ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ld
   
 29. Observe the downloaded book:
   ![Downloading a book](docs/25-Downloading-a-book.png "Downloading a book")
+  
+## <a name="troubleshooting"></a> Troubleshooting
+
+### LDAP users don't get imported
+
+Please note that sometimes LDAP server doesn't import correctly which results in authentication errors.
+To resolve this issue you will need to do the following:
+```bash
+docker-compose exec ldap bash
+
+bash> ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
+```
+
+### Books don't show up
+
+If you don't see any books in the admin UI or SimplyE, it might because the Elasticsearch server failed to import metadata because the cluster is in read-only state. To resolve the issue you need to do the following:
+
+1. Update the Elasticsearch indices:
+```bash
+docker-compose exec es bash
+
+bash> curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
+bash> curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+
+exit
+```
+
+2. Truncate work coverage records to be able to recreate the search index:
+```
+docker-compose exec db bash
+
+psql -U simplified simplified_circulation_dev  # Please use the credentials from .env file
+psql> truncate workcoveragerecords;
+psql> exit;
+
+bash> exit
+```
+
+3. Recreate the search index:
+```
+docker-compose exec cm bash
+
+bash>  source env/bin/activate
+(env)> bin/search_index_refresh
+(env)> exit
+```
+
+4. Clear the CM's cache:
+```
+docker-compose exec db bash
+
+psql -U simplified simplified_circulation_dev  # Please use the credentials from .env file
+psql> truncate cachedfeeds;
+psql> exit;
+
+bash> exit
+```
