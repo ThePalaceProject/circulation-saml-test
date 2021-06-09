@@ -179,7 +179,7 @@ docker-compose exec es bash
 bash> curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
 bash> curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 
-exit
+bash> exit
 ```
 
 2. Truncate work coverage records to be able to recreate the search index:
