@@ -206,6 +206,7 @@ services:
       - cm
     environment:
       CM_AUTHENTICATION_DOCUMENT_URL:
+      CM_LOANS_URL:
       CM_GROUPS_URL:
     networks:
       - back
