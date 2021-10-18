@@ -1,9 +1,9 @@
 FROM centos:7
 MAINTAINER michel4j@gmail.com
 
-RUN yum -y install 389-ds-base.x86_64 openldap-clients \
-  curl hostname procps-ng openssl nss-tools coreutils && \
-  yum clean all
+RUN yum-config-manager --disable updates && \
+    yum -y install 389-ds-base.x86_64 openldap-clients curl hostname procps-ng openssl nss-tools coreutils && \
+    yum clean all
 
 RUN curl -qL https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 -o /confd && \
   chmod +x /confd
@@ -27,10 +27,11 @@ RUN mkdir /etc/dirsrv-tmpl && mv /etc/dirsrv/* /etc/dirsrv-tmpl
 EXPOSE 389 636
 
 # supervisord
-RUN yum install -y python python-setuptools && \
-  easy_install pip && \
-  pip install pip --upgrade && \
-  pip install supervisor
+RUN yum -y install epel-release && \
+    yum -y update && \
+    yum -y install python-pip && \
+    yum clean all && \
+    pip install supervisor
 RUN mkdir -p /etc/supervisor
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 

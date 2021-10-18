@@ -19,7 +19,8 @@ ENV JETTY_HOME=/opt/jetty-home \
   JETTY_BASE=/opt/shib-jetty-base \
   PATH=$PATH:$JRE_HOME/bin
 
-RUN yum -y update \
+RUN yum-config-manager --disable updates \
+  && yum -y update \
   && yum -y install wget tar which \
   && yum -y clean all
 
@@ -42,13 +43,13 @@ RUN mkdir -p /opt/shib-jetty-base/modules /opt/shib-jetty-base/lib/ext  /opt/shi
   && /opt/jre-home/bin/java -jar ../jetty-home/start.jar --add-to-startd=http,deploy,ext,annotations,jstl
 
 # Download Shibboleth IdP, verify the hash, and install
-RUN wget -q https://shibboleth.net/downloads/identity-provider/$idp_version/shibboleth-identity-provider-$idp_version.tar.gz \
+RUN wget --no-check-certificate -q https://shibboleth.net/downloads/identity-provider/$idp_version/shibboleth-identity-provider-$idp_version.tar.gz \
   && echo "$idp_hash  shibboleth-identity-provider-$idp_version.tar.gz" | sha256sum -c - \
   && tar -zxvf  shibboleth-identity-provider-$idp_version.tar.gz -C /opt \
   && ln -s /opt/shibboleth-identity-provider-$idp_version/ /opt/shibboleth-idp
 
 # Download the library to allow SOAP Endpoints, verify the hash, and place
-RUN wget -q https://build.shibboleth.net/nexus/content/repositories/releases/net/shibboleth/utilities/jetty9/jetty9-dta-ssl/1.0.0/jetty9-dta-ssl-1.0.0.jar \
+RUN wget --no-check-certificate -q https://build.shibboleth.net/nexus/content/repositories/releases/net/shibboleth/utilities/jetty9/jetty9-dta-ssl/1.0.0/jetty9-dta-ssl-1.0.0.jar \
   && echo "$dta_hash  jetty9-dta-ssl-1.0.0.jar" | sha1sum -c - \
   && mv jetty9-dta-ssl-1.0.0.jar /opt/shib-jetty-base/lib/ext/
 
@@ -106,7 +107,8 @@ ENV JETTY_HOME=/opt/jetty-home \
   JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=changeme \
   PATH=$PATH:$JRE_HOME/bin
 
-RUN yum -y update \
+RUN yum-config-manager --disable updates \
+  && yum -y update \
   && yum -y install which \
   && yum -y clean all
 
