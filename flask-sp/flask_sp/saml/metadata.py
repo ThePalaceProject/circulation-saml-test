@@ -12,7 +12,7 @@ from onelogin.saml2.xml_utils import OneLogin_Saml2_XML
 from flask_sp.db import IdentityProviderMetadata, get_db
 
 
-class MetadataManager(object):
+class MetadataManager:
     IN_COMMON_METADATA_SERVICE_URL = 'http://md.incommon.org/InCommon/InCommon-metadata-idp-only.xml'
     ENTITY_DESCRIPTOR_XPATH = '//md:EntityDescriptor'
     IDP_DESCRIPTOR_XPATH = './md:IDPSSODescriptor'
@@ -73,8 +73,7 @@ class MetadataManager(object):
             metadata = file.read()
             metadata_dom = self._convert_string_to_xml_dom(metadata)
 
-            for idp in self._parse_metadata_dom(metadata_dom):
-                yield idp
+            yield from self._parse_metadata_dom(metadata_dom)
 
     def fetch_idps(self, local_metadata_path):
         test_idps = []
@@ -87,7 +86,7 @@ class MetadataManager(object):
         except:
             self._logger.exception('An unexpected error occurred during fetching local IdPs')
 
-        self._logger.info('Successfully fetched {0} local IdPs'.format(len(test_idps)))
+        self._logger.info('Successfully fetched {} local IdPs'.format(len(test_idps)))
 
         in_common_idps = []
 
@@ -131,12 +130,12 @@ def init_metadata(local_metadata_path):
 
     idps = metadata_manager.fetch_idps(local_metadata_path)
 
-    click.echo('Fetched {0} IdPs'.format(len(idps)))
+    click.echo('Fetched {} IdPs'.format(len(idps)))
 
     db.session.add_all(idps)
     db.session.commit()
 
-    click.echo('Saved {0} IdPs to the database'.format(len(idps)))
+    click.echo('Saved {} IdPs to the database'.format(len(idps)))
 
 
 @click.command('init-metadata')

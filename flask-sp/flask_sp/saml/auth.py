@@ -10,7 +10,7 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from flask_sp.db import IdentityProviderMetadata
 
 
-class AuthenticationManager(object):
+class AuthenticationManager:
     ACTIVE_IDP_ENTITY_ID_SESSION_KEY = 'ACTIVE_IDP_ENTITY_ID'
     ACTIVE_USER_SESSION_KEY = 'ACTIVE_USER'
 
