@@ -1,6 +1,6 @@
 Flask
 Flask-SQLAlchemy
-python-saml==2.10.0
+python3-saml
 isodate
 defusedxml
 xmlsec

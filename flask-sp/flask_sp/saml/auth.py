@@ -1,5 +1,5 @@
 import logging
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from flask import current_app, abort, session, request, url_for
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
