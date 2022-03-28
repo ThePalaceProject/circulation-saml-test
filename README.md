@@ -24,6 +24,14 @@ The architecture of the testbed is shown in the picture below:
 - `opds.hilbertteam.net` and `opds.hilbert.team` are two instances of [flask-sp](flask-sp) serving two different OPDS feeds using SAML 
 
 ## Usage
+---
+***For circulation manager developers***  
+
+In case this environment is being used to test out SAML authentication integration with an already running
+CM on a development machine `docker-compose-saml-test.yml` can be used instead
+This file does not contain the db,es,cm and cm-test services.
+
+---
 
 ### Preparing the local environment
 1. Update host names in [.env](./.env) file
@@ -43,6 +51,13 @@ docker-compose build
 ```bash
 docker-compose up -d metadata
 ```
+NOTE: If the metadata service runs multiple times (over the course of development) it may overwrite the the output files
+In which case one would get an error while trying to authenticate 
+```
+The application you have accessed is not registered for use with this service.
+```
+In this case please ensure the output cm.xml and idp.xml still match what has been set in the CM's Patron Authentication  
+
 5. Run all other services:
 ```bash
 docker-compose up -d

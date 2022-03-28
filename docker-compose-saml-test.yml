@@ -1,0 +1,171 @@
+version: "3.6"
+
+secrets:
+  idp_encryption:
+    file: ./secrets/idp/idp-encryption.key
+  idp_signing:
+    file: ./secrets/idp/idp-signing.key
+  idp_sealer:
+    file: ./secrets/idp/sealer.jks
+
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+
+volumes:
+  es-data:
+  db-data:
+  ldap-data:
+  ldap-config:
+  ldap-logs:
+  uwsgi-logs:
+
+x-opds-feed: &x-opds-feed
+  build: ./flask-sp
+  image: flask-sp:latest
+  restart: always
+  expose:
+    - "80"
+  depends_on:
+    - metadata
+
+services:
+  metadata:
+    build: ./metadata/
+    image: metadata:latest
+    environment:
+      IDP_ENTITYID:
+      IDP_SSO:
+      CM_ENTITYID:
+      CM_ACS:
+      OPDS1_ENTITYID:
+      OPDS1_ACS:
+      OPDS2_ENTITYID:
+      OPDS2_ACS:
+    volumes:
+      - type: bind
+        source: ./metadata/output
+        target: /metadata
+
+  ldap:
+    build: ./ldap/
+    image: ldap:latest
+    restart: always
+    environment:
+      HOSTNAME:
+      LDAP_SUFFIX:
+      LDAP_ADMIN_USERNAME:
+      LDAP_ADMIN_PASSWORD:
+      LDAP_MANAGER_PASSWORD:
+    volumes:
+      - ldap-data:/var/lib/dirsrv
+      - ldap-config:/etc/dirsrv
+      - ldap-logs:/var/log/dirsrv
+    networks:
+      - back
+
+  idp:
+    build: ./shibboleth-idp/
+    image: shibboleth-idp
+    restart: always
+    expose:
+      - "80"
+    depends_on:
+      - ldap
+      - metadata
+    secrets:
+      - source: idp_encryption
+      - source: idp_signing
+      - source: idp_sealer
+    environment:
+      LDAP_SUFFIX:
+      LDAP_ADMIN_USERNAME:
+      LDAP_ADMIN_PASSWORD:
+      IDP_ENTITYID:
+      CM_ENTITYID:
+      OPDS1_ENTITYID:
+      OPDS2_ENTITYID:
+    volumes:
+      - type: bind
+        source: ./metadata/output/
+        target: /opt/shibboleth-idp/metadata
+    networks:
+      back:
+        aliases:
+          - ${IDP_HOSTNAME}
+
+  opds1:
+    <<: *x-opds-feed
+    environment:
+      SAML_PATH: /app/config/saml
+      LOCAL_METADATA_PATH: /metadata/idp.xml
+      IDP_ENTITYID:
+      IDP_HOSTNAME:
+      OPDS1_ENTITYID:
+      OPDS1_ACS:
+    volumes:
+      - type: bind
+        source: ./metadata/output
+        target: /metadata
+      - type: bind
+        source: ./flask-sp/opds-config/opds1/saml/confd
+        target: /app/config/saml
+      - type: bind
+        source: ./flask-sp/opds-config/opds1/opds/feed.xml
+        target: /app/flask_sp/templates/feed/index.xml
+      - type: bind
+        source: ./flask-sp/opds-config/opds1/opds/books
+        target: /app/flask_sp/static/books
+    networks:
+      back:
+        aliases:
+          - ${OPDS1_HOSTNAME}
+
+  opds2:
+    <<: *x-opds-feed
+    environment:
+      SAML_PATH: /app/config/saml
+      LOCAL_METADATA_PATH: /metadata/idp.xml
+      IDP_ENTITYID:
+      IDP_HOSTNAME:
+      OPDS2_ENTITYID:
+      OPDS2_ACS:
+    volumes:
+      - type: bind
+        source: ./metadata/output
+        target: /metadata
+      - type: bind
+        source: ./flask-sp/opds-config/opds2/saml/confd
+        target: /app/config/saml
+      - type: bind
+        source: ./flask-sp/opds-config/opds2/opds/feed.xml
+        target: /app/flask_sp/templates/feed/index.xml
+      - type: bind
+        source: ./flask-sp/opds-config/opds2/opds/books
+        target: /app/flask_sp/static/books
+    networks:
+      back:
+        aliases:
+          - ${OPDS2_HOSTNAME}
+
+  proxy:
+    build: ./proxy
+    image: proxy:latest
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - idp
+      - opds1
+      - opds2
+    environment:
+      IDP_HOSTNAME:
+      OPDS1_HOSTNAME:
+      OPDS2_HOSTNAME:
+      CM_HOSTNAME:
+      CMTEST_HOSTNAME:
+    networks:
+      - front
+      - back
