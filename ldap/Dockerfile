@@ -28,8 +28,7 @@ EXPOSE 389 636
 
 # supervisord
 RUN yum install -y python python-setuptools && \
-  easy_install pip && \
-  pip install pip --upgrade && \
+  curl -o "get-pip.py" https://bootstrap.pypa.io/pip/2.7/get-pip.py && python get-pip.py && \
   pip install supervisor
 RUN mkdir -p /etc/supervisor
 COPY supervisord.conf /etc/supervisor/supervisord.conf
