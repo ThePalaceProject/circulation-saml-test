@@ -27,11 +27,9 @@ RUN mkdir /etc/dirsrv-tmpl && mv /etc/dirsrv/* /etc/dirsrv-tmpl
 EXPOSE 389 636
 
 # supervisord
-RUN yum -y install epel-release && \
-    yum -y update && \
-    yum -y install python-pip && \
-    yum clean all && \
-    pip install supervisor
+RUN yum install -y python python-setuptools && \
+  curl -o "get-pip.py" https://bootstrap.pypa.io/pip/2.7/get-pip.py && python get-pip.py && \
+  pip install supervisor
 RUN mkdir -p /etc/supervisor
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
