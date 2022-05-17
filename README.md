@@ -51,7 +51,7 @@ docker-compose up -d
 ### Setting up Circulation Manager
 
 #### Setting up a new administrator account 
-1. Open [Circulation Manager](http://cm.hilbertteam.net) and set up an administrator account:
+1. Open [Circulation Manager](http://cm.hilbertteam.net/admin) and set up an administrator account:
   ![Setting up an administrator account](docs/01-Setting-up-an-administrator-account.png "Setting up an administrator account")
   
 2. Login into Circulation Manager:
