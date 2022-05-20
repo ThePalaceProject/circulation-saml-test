@@ -6,6 +6,7 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.constants import OneLogin_Saml2_Constants
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
+from onelogin.saml2.xml_utils import OneLogin_Saml2_XML
 
 from flask_sp.db import IdentityProviderMetadata
 
@@ -35,7 +36,7 @@ class AuthenticationManager:
         idp_entity_id = want_authn_requests_signed = idp_name_id_format = idp_sso_url = idp_slo_url = certs = None
         entity_descriptor_node = dom
 
-        idp_descriptor_nodes = OneLogin_Saml2_Utils.query(entity_descriptor_node, './md:IDPSSODescriptor')
+        idp_descriptor_nodes = OneLogin_Saml2_XML.query(entity_descriptor_node, './md:IDPSSODescriptor')
         if len(idp_descriptor_nodes) > 0:
             idp_descriptor_node = idp_descriptor_nodes[0]
 
@@ -43,11 +44,11 @@ class AuthenticationManager:
 
             want_authn_requests_signed = entity_descriptor_node.get('WantAuthnRequestsSigned', None)
 
-            name_id_format_nodes = OneLogin_Saml2_Utils.query(idp_descriptor_node, './md:NameIDFormat')
+            name_id_format_nodes = OneLogin_Saml2_XML.query(idp_descriptor_node, './md:NameIDFormat')
             if len(name_id_format_nodes) > 0:
-                idp_name_id_format = OneLogin_Saml2_Utils.element_text(name_id_format_nodes[0])
+                idp_name_id_format = OneLogin_Saml2_XML.element_text(name_id_format_nodes[0])
 
-            sso_nodes = OneLogin_Saml2_Utils.query(
+            sso_nodes = OneLogin_Saml2_XML.query(
                 idp_descriptor_node,
                 "./md:SingleSignOnService[@Binding='%s']" % required_sso_binding
             )
@@ -55,17 +56,17 @@ class AuthenticationManager:
             if len(sso_nodes) > 0:
                 idp_sso_url = sso_nodes[0].get('Location', None)
 
-            slo_nodes = OneLogin_Saml2_Utils.query(
+            slo_nodes = OneLogin_Saml2_XML.query(
                 idp_descriptor_node,
                 "./md:SingleLogoutService[@Binding='%s']" % required_slo_binding
             )
             if len(slo_nodes) > 0:
                 idp_slo_url = slo_nodes[0].get('Location', None)
 
-            signing_nodes = OneLogin_Saml2_Utils.query(
+            signing_nodes = OneLogin_Saml2_XML.query(
                 idp_descriptor_node,
                 "./md:KeyDescriptor[not(contains(@use, 'encryption'))]/ds:KeyInfo/ds:X509Data/ds:X509Certificate")
-            encryption_nodes = OneLogin_Saml2_Utils.query(
+            encryption_nodes = OneLogin_Saml2_XML.query(
                 idp_descriptor_node,
                 "./md:KeyDescriptor[not(contains(@use, 'signing'))]/ds:KeyInfo/ds:X509Data/ds:X509Certificate")
 
@@ -74,11 +75,11 @@ class AuthenticationManager:
                 if len(signing_nodes) > 0:
                     certs['signing'] = []
                     for cert_node in signing_nodes:
-                        certs['signing'].append(''.join(OneLogin_Saml2_Utils.element_text(cert_node).split()))
+                        certs['signing'].append(''.join(OneLogin_Saml2_XML.element_text(cert_node).split()))
                 if len(encryption_nodes) > 0:
                     certs['encryption'] = []
                     for cert_node in encryption_nodes:
-                        certs['encryption'].append(''.join(OneLogin_Saml2_Utils.element_text(cert_node).split()))
+                        certs['encryption'].append(''.join(OneLogin_Saml2_XML.element_text(cert_node).split()))
 
             data['idp'] = {}
 
