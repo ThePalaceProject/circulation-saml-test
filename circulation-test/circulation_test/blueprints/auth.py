@@ -1,5 +1,5 @@
 import os
-import urlparse
+import urllib.parse
 
 import requests
 from flask import Blueprint, request, redirect, session, url_for, render_template
