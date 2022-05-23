@@ -188,9 +188,6 @@ bash> ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-us
 Sometimes during development and rebuilding/restarting of the containers you get 500 error code when accessing Circulation Manager test application. Reason might be
 stale access token that gets rejected by the Circulation Manager. Solution is to delete the session cookie on the Circulation Manager test application and refresh the page.
 
-
-
-
 ### Books don't show up
 
 If you don't see any books in the admin UI or SimplyE, it might because the Elasticsearch server failed to import metadata because the cluster is in read-only state. To resolve the issue you need to do the following:
