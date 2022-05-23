@@ -86,7 +86,7 @@ class MetadataManager:
         except:
             self._logger.exception('An unexpected error occurred during fetching local IdPs')
 
-        self._logger.info('Successfully fetched {} local IdPs'.format(len(test_idps)))
+        self._logger.info(f'Successfully fetched {len(test_idps)} local IdPs')
 
         in_common_idps = []
 
@@ -130,12 +130,12 @@ def init_metadata(local_metadata_path):
 
     idps = metadata_manager.fetch_idps(local_metadata_path)
 
-    click.echo('Fetched {} IdPs'.format(len(idps)))
+    click.echo(f'Fetched {len(idps)} IdPs')
 
     db.session.add_all(idps)
     db.session.commit()
 
-    click.echo('Saved {} IdPs to the database'.format(len(idps)))
+    click.echo(f'Saved {len(idps)} IdPs to the database')
 
 
 @click.command('init-metadata')

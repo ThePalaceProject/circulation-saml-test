@@ -16,7 +16,7 @@ def login():
         return render_template('auth/login.html')
     elif request.method == 'POST':
         idp = request.form.get('idp')
-        _logger.info('Started authentication process for IdP {}'.format(idp))
+        _logger.info(f'Started authentication process for IdP {idp}')
 
         auth_manager = AuthenticationManager(idp)
 

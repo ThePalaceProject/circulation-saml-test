@@ -21,7 +21,7 @@ def fetch_idps():
     query = request.args.get('q')
 
     if query:
-        query = '%{}%'.format(query)
+        query = f'%{query}%'
         identity_providers = IdentityProviderMetadata.query.filter(IdentityProviderMetadata.display_name.ilike(query))
     else:
         identity_providers = IdentityProviderMetadata.query.all()

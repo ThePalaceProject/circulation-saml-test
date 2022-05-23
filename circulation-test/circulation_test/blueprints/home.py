@@ -16,7 +16,7 @@ GROUPS_URL = os.environ.get('CM_GROUPS_URL', 'http://cm.hilbertteam.net/TEST/gro
 def _get_loans(access_token):
     loans = []
     response = requests.get(LOANS_URL, headers={
-        'Authorization': 'Bearer {0}'.format(access_token)
+        'Authorization': f'Bearer {access_token}'
     })
 
     if response.status_code != 200:
