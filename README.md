@@ -183,9 +183,9 @@ docker-compose exec ldap bash
 bash> ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
 ```
 
-### Circulation Manager test applications errors out with 500 error code
+### Circulation Manager test applications errors out with error code 500
 
-Sometimes during development and rebuilding/restarting of the containers you get 500 error code when accessing Circulation Manager test application. Reason might be
+Sometimes during development and rebuilding/restarting of the containers you get error with the error code 500 when accessing Circulation Manager test application. Reason might be
 stale access token that gets rejected by the Circulation Manager. Solution is to delete the session cookie on the Circulation Manager test application and refresh the page.
 
 ### Books don't show up
