@@ -10,7 +10,7 @@ def borrow():
     access_token = session['ACCESS_TOKEN']
     book_response = requests.get(
         link,
-        headers={'Authorization': 'Bearer: {0}'.format(access_token)},
+        headers={'Authorization': f'Bearer: {access_token}'},
         allow_redirects=False)
 
     return book_response.content, book_response.status_code, book_response.headers.items()
@@ -22,7 +22,7 @@ def download():
     access_token = session['ACCESS_TOKEN']
     book_response = requests.get(
         link,
-        headers={'Authorization': 'Bearer: {0}'.format(access_token)},
+        headers={'Authorization': f'Bearer: {access_token}'},
         allow_redirects=False)
 
     return book_response.content, book_response.status_code, book_response.headers.items()

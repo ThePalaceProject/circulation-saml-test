@@ -150,67 +150,6 @@ services:
         aliases:
           - ${OPDS2_HOSTNAME}
 
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_DB: simplified_circulation_dev
-      POSTGRES_USER: simplified
-      POSTGRES_PASSWORD: password
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - back
-
-  es:
-    build: ./elasticsearch
-    image: elasticsearch:latest
-    restart: always
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-    networks:
-      - back
-
-  cm:
-    image: ghcr.io/thepalaceproject/circ-webapp:main
-    restart: always
-    expose:
-      - "80"
-    depends_on:
-      - db
-      - es
-      - metadata
-      - idp
-      - opds1
-      - opds2
-    environment:
-      SIMPLIFIED_PRODUCTION_DATABASE: postgres://simplified:password@db:5432/simplified_circulation_dev
-    volumes:
-      - uwsgi-logs:/var/log/uwsgi
-    networks:
-      back:
-        aliases:
-          - ${CM_HOSTNAME}
-
-  cm-test:
-    build: ./circulation-test/
-    image: circulation-test:latest
-    restart: always
-    expose:
-      - "80"
-    depends_on:
-      - cm
-    environment:
-      CM_AUTHENTICATION_DOCUMENT_URL:
-      CM_LOANS_URL:
-      CM_GROUPS_URL:
-    networks:
-      - back
-
   proxy:
     build: ./proxy
     image: proxy:latest
@@ -221,8 +160,6 @@ services:
       - idp
       - opds1
       - opds2
-      - cm
-      - cm-test
     environment:
       IDP_HOSTNAME:
       OPDS1_HOSTNAME:

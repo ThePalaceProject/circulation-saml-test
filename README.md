@@ -24,6 +24,14 @@ The architecture of the testbed is shown in the picture below:
 - `opds.hilbertteam.net` and `opds.hilbert.team` are two instances of [flask-sp](flask-sp) serving two different OPDS feeds using SAML 
 
 ## Usage
+---
+***For circulation manager developers***  
+
+In case this environment is being used to test out SAML authentication integration with an already running
+CM on a development machine `docker-compose-saml-test.yml` can be used instead
+This file does not contain the db,es,cm and cm-test services.
+
+---
 
 ### Preparing the local environment
 1. Update host names in [.env](./.env) file
@@ -43,6 +51,13 @@ docker-compose build
 ```bash
 docker-compose up -d metadata
 ```
+NOTE: If the metadata service runs multiple times (over the course of development) it may overwrite the the output files
+In which case one would get an error while trying to authenticate 
+```
+The application you have accessed is not registered for use with this service.
+```
+In this case please ensure the output cm.xml and idp.xml still match what has been set in the CM's Patron Authentication  
+
 5. Run all other services:
 ```bash
 docker-compose up -d
@@ -51,7 +66,7 @@ docker-compose up -d
 ### Setting up Circulation Manager
 
 #### Setting up a new administrator account 
-1. Open [Circulation Manager](http://cm.hilbertteam.net) and set up an administrator account:
+1. Open [Circulation Manager](http://cm.hilbertteam.net/admin) and set up an administrator account:
   ![Setting up an administrator account](docs/01-Setting-up-an-administrator-account.png "Setting up an administrator account")
   
 2. Login into Circulation Manager:
@@ -167,6 +182,11 @@ docker-compose exec ldap bash
 
 bash> ldapadd -x -D"cn=Directory Manager" -w${LDAP_MANAGER_PASSWORD} -f /init-users.ldif
 ```
+
+### Circulation Manager test applications errors out with error code 500
+
+Sometimes during development and rebuilding/restarting of the containers you get error with the error code 500 when accessing Circulation Manager test application. Reason might be
+stale access token that gets rejected by the Circulation Manager. Solution is to delete the session cookie on the Circulation Manager test application and refresh the page.
 
 ### Books don't show up
 

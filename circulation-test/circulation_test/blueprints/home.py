@@ -1,6 +1,6 @@
 import os
 
-from StringIO import StringIO
+from io import BytesIO
 
 import requests
 from flask import Blueprint, render_template, session, redirect, url_for
@@ -16,9 +16,13 @@ GROUPS_URL = os.environ.get('CM_GROUPS_URL', 'http://cm.hilbertteam.net/TEST/gro
 def _get_loans(access_token):
     loans = []
     response = requests.get(LOANS_URL, headers={
-        'Authorization': 'Bearer {0}'.format(access_token)
+        'Authorization': f'Bearer {access_token}'
     })
-    loans_feed = StringIO(response.content)
+
+    if response.status_code != 200:
+        return response.content
+
+    loans_feed = BytesIO(response.content)
     print(loans_feed)
     tree = etree.parse(loans_feed)
     namespaces = {"atom": "http://www.w3.org/2005/Atom"}
@@ -53,7 +57,7 @@ def _get_loans(access_token):
 def _get_books():
     books = []
     response = requests.get(GROUPS_URL)
-    group_feed = StringIO(response.content)
+    group_feed = BytesIO(response.content)
     tree = etree.parse(group_feed)
     namespaces = {"atom": "http://www.w3.org/2005/Atom"}
     entry_nodes = tree.xpath('//atom:entry', namespaces=namespaces)

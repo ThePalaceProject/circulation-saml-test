@@ -3,7 +3,7 @@ import os
 
 from flask import Flask
 
-import db
+from . import db
 from flask_sp.saml import metadata
 from flask_sp.blueprints import auth, books, feed, home, saml
 

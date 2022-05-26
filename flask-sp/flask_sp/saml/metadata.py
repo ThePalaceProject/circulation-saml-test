@@ -7,11 +7,12 @@ from flask.cli import with_appcontext
 from onelogin.saml2.constants import OneLogin_Saml2_Constants
 from onelogin.saml2.idp_metadata_parser import OneLogin_Saml2_IdPMetadataParser
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
+from onelogin.saml2.xml_utils import OneLogin_Saml2_XML
 
 from flask_sp.db import IdentityProviderMetadata, get_db
 
 
-class MetadataManager(object):
+class MetadataManager:
     IN_COMMON_METADATA_SERVICE_URL = 'http://md.incommon.org/InCommon/InCommon-metadata-idp-only.xml'
     ENTITY_DESCRIPTOR_XPATH = '//md:EntityDescriptor'
     IDP_DESCRIPTOR_XPATH = './md:IDPSSODescriptor'
@@ -44,15 +45,15 @@ class MetadataManager(object):
         return metadata_dom
 
     def _parse_metadata_dom(self, metadata_dom):
-        entity_descriptor_nodes = OneLogin_Saml2_Utils.query(metadata_dom, self.ENTITY_DESCRIPTOR_XPATH)
+        entity_descriptor_nodes = OneLogin_Saml2_XML.query(metadata_dom, self.ENTITY_DESCRIPTOR_XPATH)
         idps = []
 
         for entity_descriptor_node in entity_descriptor_nodes:
-            idp_descriptor_nodes = OneLogin_Saml2_Utils.query(entity_descriptor_node, self.IDP_DESCRIPTOR_XPATH)
+            idp_descriptor_nodes = OneLogin_Saml2_XML.query(entity_descriptor_node, self.IDP_DESCRIPTOR_XPATH)
 
             for idp_descriptor_node in idp_descriptor_nodes:
                 idp_entity_id = entity_descriptor_node.get(self.ENTITY_ID_ATTRIBUTE, None)
-                display_name_node = OneLogin_Saml2_Utils.query(idp_descriptor_node, self.DISPLAY_NAME_XPATH)
+                display_name_node = OneLogin_Saml2_XML.query(idp_descriptor_node, self.DISPLAY_NAME_XPATH)
 
                 if not display_name_node:
                     continue
@@ -72,8 +73,7 @@ class MetadataManager(object):
             metadata = file.read()
             metadata_dom = self._convert_string_to_xml_dom(metadata)
 
-            for idp in self._parse_metadata_dom(metadata_dom):
-                yield idp
+            yield from self._parse_metadata_dom(metadata_dom)
 
     def fetch_idps(self, local_metadata_path):
         test_idps = []
@@ -86,7 +86,7 @@ class MetadataManager(object):
         except:
             self._logger.exception('An unexpected error occurred during fetching local IdPs')
 
-        self._logger.info('Successfully fetched {0} local IdPs'.format(len(test_idps)))
+        self._logger.info(f'Successfully fetched {len(test_idps)} local IdPs')
 
         in_common_idps = []
 
@@ -130,12 +130,12 @@ def init_metadata(local_metadata_path):
 
     idps = metadata_manager.fetch_idps(local_metadata_path)
 
-    click.echo('Fetched {0} IdPs'.format(len(idps)))
+    click.echo(f'Fetched {len(idps)} IdPs')
 
     db.session.add_all(idps)
     db.session.commit()
 
-    click.echo('Saved {0} IdPs to the database'.format(len(idps)))
+    click.echo(f'Saved {len(idps)} IdPs to the database')
 
 
 @click.command('init-metadata')

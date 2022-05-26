@@ -1,6 +1,6 @@
 import os
 
-import urlparse
+from urllib.parse import urlparse
 
 from flask import Blueprint, redirect, request, url_for
 
@@ -22,7 +22,7 @@ def index(book):
 
     while True:
         if request.referrer:
-            parse_result = urlparse.urlparse(request.referrer)
+            parse_result = urlparse(request.referrer)
 
             if IDP_HOSTNAME in parse_result.netloc:
                 break

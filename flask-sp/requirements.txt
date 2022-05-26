@@ -1,6 +1,6 @@
 Flask
 Flask-SQLAlchemy
-python-saml
+python3-saml
 isodate
 defusedxml
 xmlsec
